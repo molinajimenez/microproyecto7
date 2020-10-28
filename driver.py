@@ -1,6 +1,7 @@
 import random
-import os
+import sys
 import numpy as np
+import matplotlib.pyplot as plt
 
 def exponential(x):
     time =  np.log(np.random.uniform()) *-1
@@ -32,7 +33,8 @@ def get_uniform():
 #parte 1
 x_var = exponential(1)
 y_var = exponential(1)
-print("antiteticas", (x_var + y_var) / 2)
+suma = x_var + y_var
+print("Valor esperado por antiteticas es: ", suma / 2)
 
 
 #parte 2
@@ -52,7 +54,61 @@ def control(n):
     for i in range(n):
         vi = vi+(lista_x[i] + c*(lista_y[i] - 0.5))    
 
-    return vi/n
+    
+    
+    return vi[0]/n
+
+print("variables de control es: ", control(int(sys.argv[1])))
+#parte 3
+def strati(values_list): 
+	print("rango 0 a 1:")
+	ev = 0
+	for i in range(len(values_list[0:10])):
+		ev = ev + (i/10)*(values_list[i])
+	print("valor esperado es: ", ev)
+
+	ev = 0
+	print("rango 1 a 3:")
+	for i in range(len(values_list[10:30])):
+		ev = ev + (i+10)*(values_list[i+10])
+	print("valor esperado es: ", ev/10)
+
+	ev = 0
+	print("rango 3 a infinito:")
+	for i in range(len(values_list[30:])):
+		ev = ev + (i+30)*(values_list[i+30])
+	print("valor esperado es: ", ev/10000)
 
 
-print(control(1000))
+x_values =[]
+y_values =[]
+for i in range(1,int(sys.argv[1])):
+	x_values.append(i)
+	y_values.append(exponential(i))
+
+strati(values_list = y_values)
+
+plt.plot(y_values)
+plt.savefig('books_read.png')
+
+
+#parte 4
+def parte4(length):
+    exp_x = []
+    exp_y = []
+     
+    for x in range(length):
+        x = np.random.random(size=1)
+        exp_x.append(exponential(x))
+        y = np.random.random(size=1)
+        exp_y.append(exponential(1/y))
+
+    positivas = 0
+    for i in range(0, len(exp_x)):
+        if exp_x[i] * exp_y[i] <= 3:
+            positivas = positivas + 1 
+    
+    return positivas/len(exp_x)
+     
+
+print("La eficiencia de este algoritmo para estimar P(XY<=3) es: ",parte4(int(sys.argv[1])))
